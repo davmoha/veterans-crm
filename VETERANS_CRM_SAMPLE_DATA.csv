@@ -1,0 +1,11 @@
+firstName,lastName,email,phone,state,zipCode,city,address,employer,jobTitle,contactTypes,emailOptIn,smsOptIn,physicalMailOptIn,notes
+John,Smith,john.smith@email.com,813-555-1234,FL,33602,Tampa,123 Main St,ABC Corp,Manager,Volunteer;Member,true,false,true,Met at conference
+Sarah,Johnson,sarah.j@email.com,305-555-5678,FL,33101,Miami,456 Oak Ave,XYZ Inc,Director,Board;Donor,true,true,true,Board member since 2020
+Michael,Davis,m.davis@email.com,727-555-9999,FL,34711,Lakeland,789 Pine Rd,123 Services,Coordinator,Volunteer,true,false,false,Interested in memory care programs
+Patricia,Martinez,p.martinez@email.com,941-555-4321,FL,34236,Sarasota,321 Elm St,Community Health,Nurse,Volunteer,true,true,true,Healthcare background
+Robert,Wilson,r.wilson@email.com,352-555-6789,FL,32601,Gainesville,654 Maple Ave,State University,Professor,Member;Donor,true,false,true,Academic supporter
+Linda,Garcia,l.garcia@email.com,561-555-5555,FL,33401,West Palm Beach,987 Cedar Ln,Senior Services,Director,Board,true,true,true,Leadership committee
+James,Anderson,j.anderson@email.com,239-555-8765,FL,33901,Fort Myers,147 Birch Rd,Retired,Retired,Volunteer,true,false,false,Recently retired
+Jennifer,Taylor,j.taylor@email.com,904-555-4321,FL,32202,Jacksonville,258 Spruce St,Tech Company,Developer,Member,true,true,false,Young professional
+David,Brown,d.brown@email.com,407-555-9876,FL,32801,Orlando,369 Ash Ave,Healthcare,Administrator,Donor,true,false,true,Major donor
+Mary,Lee,m.lee@email.com,954-555-3333,FL,33301,Fort Lauderdale,741 Oak St,Non-profit,Executive Director,Board;Donor,true,true,true,Executive board member
