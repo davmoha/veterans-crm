@@ -13,12 +13,12 @@ export async function setupVite(app: Express, server: Server) {
     server: { middlewareMode: true },
     appType: "custom"
   });
+  const template = await fs.readFile(path.resolve(projectRoot, "index.html"), "utf8");
 
   app.use(vite.middlewares);
   app.use("*", async (req, res, next) => {
     try {
       const url = req.originalUrl;
-      const template = await fs.readFile(path.resolve(projectRoot, "index.html"), "utf8");
       const html = await vite.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (error) {
@@ -32,8 +32,14 @@ export async function setupVite(app: Express, server: Server) {
 
 export function serveStatic(app: Express) {
   const clientDir = path.basename(runtimeDir) === "dist" ? path.resolve(runtimeDir, "public") : path.resolve(projectRoot, "dist/public");
+  const indexHtmlPromise = fs.readFile(path.join(clientDir, "index.html"), "utf8");
+
   app.use(express.static(clientDir));
-  app.get("*", async (_req, res) => {
-    res.sendFile(path.join(clientDir, "index.html"));
+  app.get("*", async (_req, res, next) => {
+    try {
+      res.type("html").send(await indexHtmlPromise);
+    } catch (error) {
+      next(error);
+    }
   });
 }

@@ -32,7 +32,7 @@ export function encodeSession(user: SessionUser) {
   return Buffer.from(JSON.stringify(user), "utf8").toString("base64url");
 }
 
-export function createContext({ req, res }: CreateExpressContextOptions): Context {
+export function createContext({ req, res }: Pick<CreateExpressContextOptions, "req" | "res">): Context {
   return {
     req,
     res,
