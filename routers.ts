@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME } from "./shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -14,7 +14,7 @@ import {
 export const appRouter = router({
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
+    me: publicProcedure.query((opts) => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
@@ -73,7 +73,10 @@ export const appRouter = router({
         optInSms: z.boolean().optional(),
         optInPhysicalMail: z.boolean().optional(),
       }))
-      .mutation(({ input }) => { const { id, ...data } = input; return updateConstituent(id, data); }),
+      .mutation(({ input }) => {
+        const { id, ...data } = input;
+        return updateConstituent(id, data);
+      }),
   }),
   volunteer: router({
     profile: protectedProcedure.input(z.object({ constituentId: z.number() })).query(({ input }) => getVolunteerProfile(input.constituentId)),
@@ -85,13 +88,16 @@ export const appRouter = router({
         skills: z.array(z.string()).optional(),
         emergencyContactName: z.string().optional(),
         emergencyContactPhone: z.string().optional(),
-        backgroundCheckStatus: z.enum(["Not Started","Pending","Passed","Failed","Expired"]).optional(),
+        backgroundCheckStatus: z.enum(["Not Started", "Pending", "Passed", "Failed", "Expired"]).optional(),
         backgroundCheckExpiration: z.string().optional(),
         preferredLocations: z.array(z.string()).optional(),
       }))
-      .mutation(({ input }) => { const { constituentId, ...data } = input; return upsertVolunteerProfile(constituentId, data); }),
+      .mutation(({ input }) => {
+        const { constituentId, ...data } = input;
+        return upsertVolunteerProfile(constituentId, data);
+      }),
     addShift: protectedProcedure
-      .input(z.object({ constituentId: z.number(), shiftDate: z.string(), hoursWorked: z.string(), location: z.string().optional(), description: z.string().optional(), status: z.enum(["Scheduled","Completed","Cancelled"]).optional() }))
+      .input(z.object({ constituentId: z.number(), shiftDate: z.string(), hoursWorked: z.string(), location: z.string().optional(), description: z.string().optional(), status: z.enum(["Scheduled", "Completed", "Cancelled"]).optional() }))
       .mutation(({ input }) => addVolunteerShift(input)),
   }),
   board: router({
@@ -99,74 +105,79 @@ export const appRouter = router({
     upsertProfile: protectedProcedure
       .input(z.object({
         constituentId: z.number(),
-        boardRole: z.enum(["President","Vice President","Treasurer","Secretary","Member-at-Large","Chair","Vice Chair"]).optional(),
+        boardRole: z.enum(["President", "Vice President", "Treasurer", "Secretary", "Member-at-Large", "Chair", "Vice Chair"]).optional(),
         committees: z.array(z.string()).optional(),
         termStartDate: z.string().optional(),
         termEndDate: z.string().optional(),
         termNumber: z.number().optional(),
         personalGivingTarget: z.string().optional(),
       }))
-      .mutation(({ input }) => { const { constituentId, ...data } = input; return upsertBoardProfile(constituentId, data); }),
+      .mutation(({ input }) => {
+        const { constituentId, ...data } = input;
+        return upsertBoardProfile(constituentId, data);
+      }),
   }),
   membership: router({
     profile: protectedProcedure.input(z.object({ constituentId: z.number() })).query(({ input }) => getMembershipProfile(input.constituentId)),
     upsertProfile: protectedProcedure
       .input(z.object({
         constituentId: z.number(),
-        memberTier: z.enum(["Student","Individual","Family","Corporate","VIP"]).optional(),
+        memberTier: z.enum(["Student", "Individual", "Family", "Corporate", "VIP"]).optional(),
         joinDate: z.string().optional(),
         lastRenewalDate: z.string().optional(),
         membershipExpirationDate: z.string().optional(),
         annualDuesAmount: z.string().optional(),
       }))
-      .mutation(({ input }) => { const { constituentId, ...data } = input; return upsertMembershipProfile(constituentId, data); }),
+      .mutation(({ input }) => {
+        const { constituentId, ...data } = input;
+        return upsertMembershipProfile(constituentId, data);
+      }),
   }),
   webhooks: router({
     logs: protectedProcedure.input(z.object({ limit: z.number().optional() }).optional()).query(({ input }) => getWebhookLogs(input?.limit ?? 50)),
   }),
   users: router({
     list: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user?.role !== "admin") throw new Error("Unauthorized: Admin access required");
+      if (ctx.user.role !== "admin") throw new Error("Unauthorized: Admin access required");
       return getAllUsers();
     }),
     updateRole: protectedProcedure
       .input(z.object({ userId: z.number(), role: z.enum(["user", "admin"]) }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user?.role !== "admin") throw new Error("Unauthorized: Admin access required");
+        if (ctx.user.role !== "admin") throw new Error("Unauthorized: Admin access required");
         if (input.userId === ctx.user.id && input.role === "user") throw new Error("Cannot demote yourself from admin");
         return updateUserRole(input.userId, input.role);
       }),
     delete: protectedProcedure
       .input(z.object({ userId: z.number() }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user?.role !== "admin") throw new Error("Unauthorized: Admin access required");
+        if (ctx.user.role !== "admin") throw new Error("Unauthorized: Admin access required");
         if (input.userId === ctx.user.id) throw new Error("Cannot delete yourself");
         return deleteUser(input.userId);
       }),
   }),
-});
-
-export type AppRouter = typeof appRouter;
-
   invites: router({
     create: protectedProcedure
       .input(z.object({ email: z.string().email(), role: z.enum(["user", "admin"]).default("user") }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user?.role !== "admin") throw new Error("Unauthorized");
+        if (ctx.user.role !== "admin") throw new Error("Unauthorized");
         const { createInvite } = await import("./db");
         const token = await createInvite(input.email, input.role);
         return { token, email: input.email, inviteUrl: `${process.env.VITE_OAUTH_PORTAL_URL || "http://localhost:3000"}/invite/${token}` };
       }),
     pending: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user?.role !== "admin") throw new Error("Unauthorized");
+      if (ctx.user.role !== "admin") throw new Error("Unauthorized");
       const { getPendingInvites } = await import("./db");
       return getPendingInvites();
     }),
     delete: protectedProcedure
       .input(z.object({ inviteId: z.number() }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user?.role !== "admin") throw new Error("Unauthorized");
+        if (ctx.user.role !== "admin") throw new Error("Unauthorized");
         const { deleteInvite } = await import("./db");
         return deleteInvite(input.inviteId);
       }),
   }),
+});
+
+export type AppRouter = typeof appRouter;

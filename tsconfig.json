@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/components/ui/*": ["./ui/*"],
+      "@/components/*": ["./*"],
+      "@/pages/*": ["./*"],
+      "@/lib/*": ["./*"],
+      "@/hooks/*": ["./hooks/*"],
+      "@/contexts/*": ["./contexts/*"],
+      "@/_core/*": ["./_core/*"],
+      "@shared/*": ["./shared/*"],
+      "@/const": ["./const.ts"]
+    },
+    "types": ["node", "vite/client", "vitest/globals"]
+  },
+  "include": [
+    "*.ts",
+    "*.tsx",
+    "hooks/**/*.ts",
+    "contexts/**/*.tsx",
+    "ui/**/*.tsx",
+    "_core/**/*.ts",
+    "_core/**/*.tsx",
+    "shared/**/*.ts",
+    "drizzle/**/*.ts",
+    "vitest.config.ts",
+    "vite.config.ts",
+    "drizzle.config.ts"
+  ],
+  "exclude": ["dist", "node_modules"]
+}

@@ -1,9 +1,9 @@
-import { DashboardLayout } from "@/components/DashboardLayout";
-import { trpc } from "@/lib/trpc";
+import { DashboardLayout } from "./DashboardLayout";
+import { trpc } from "./trpc";
 import { useState } from "react";
 import { Upload, CheckCircle2, AlertCircle, Loader2, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
 import { toast } from "sonner";
 
 export default function CSVImport() {

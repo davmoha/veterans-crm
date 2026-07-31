@@ -1,6 +1,7 @@
 import { eq, like, or, sql, and, isNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, constituents, volunteerProfiles, volunteerShifts, boardProfiles, membershipProfiles, webhookLogs, invites } from "../drizzle/schema";
+import { randomUUID } from "node:crypto";
+import { InsertUser, users, constituents, volunteerProfiles, volunteerShifts, boardProfiles, membershipProfiles, webhookLogs, invites } from "./drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -277,7 +278,7 @@ export async function getWebhookLogs(limit = 50) {
 export async function createInvite(email: string, role: "user" | "admin" = "user") {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const token = crypto.randomUUID();
+  const token = randomUUID();
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
   await db.insert(invites).values({ email, token, role, expiresAt });
   return token;

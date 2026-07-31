@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Check, X, Edit2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -112,16 +110,17 @@ export function EditableField({
           rows={3}
         />
       ) : type === "select" ? (
-        <Select value={editValue} onValueChange={setEditValue} disabled={isSaving}>
-          <SelectTrigger className="text-sm">
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
-          <SelectContent>
-            {options.map(opt => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <select
+          value={editValue}
+          onChange={e => setEditValue(e.target.value)}
+          disabled={isSaving}
+          className="h-10 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+        >
+          {placeholder ? <option value="">{placeholder}</option> : null}
+          {options.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
       ) : type === "checkbox" ? (
         <label className="flex items-center gap-2 cursor-pointer">
           <input
