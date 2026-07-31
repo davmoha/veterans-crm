@@ -53,14 +53,14 @@ describe("Wix Webhook — payload parsing", () => {
   });
 
   it("handles empty contactTypes gracefully", () => {
-    const raw = "";
+    const raw: string = "";
     const parsed = raw ? raw.split(",").map((s: string) => s.trim()).filter(Boolean) : [];
     expect(parsed).toEqual([]);
   });
 
   it("parses optInEmail string to boolean", () => {
-    expect("true" === "true").toBe(true);
-    expect("false" === "true").toBe(false);
+    expect(("true" as string) === "true").toBe(true);
+    expect(("false" as string) === "true").toBe(false);
     expect(undefined === "true" ? false : true).toBe(true); // defaults to true when undefined
   });
 });
@@ -168,8 +168,8 @@ describe("Wix Webhook — secret validation", () => {
   });
 
   it("rejects request with wrong secret header", () => {
-    const configuredSecret = "my-secret-value";
-    const incomingHeader = "wrong-secret";
+    const configuredSecret: string = "my-secret-value";
+    const incomingHeader: string | undefined = "wrong-secret";
     const isValid = !configuredSecret || incomingHeader === configuredSecret;
     expect(isValid).toBe(false);
   });

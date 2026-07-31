@@ -18,7 +18,7 @@
     "context.ts",
     "oauth.ts",
     "storageProxy.ts",
-    "vite.ts",
+    "viteServer.ts",
     "drizzle/schema.ts",
     "_core/**/*.ts",
     "shared/**/*.ts"
