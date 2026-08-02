@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "dist",
+    "noEmit": false,
+    "declaration": false,
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "index.ts",
+    "routers.ts",
+    "db.ts",
+    "schema.ts",
+    "webhookHandler.ts",
+    "context.ts",
+    "oauth.ts",
+    "storageProxy.ts",
+    "viteServer.ts",
+    "drizzle/schema.ts",
+    "_core/**/*.ts",
+    "shared/**/*.ts"
+  ],
+  "exclude": ["dist", "node_modules", "*.test.ts", "*.tsx", "main.tsx", "App.tsx"]
+}

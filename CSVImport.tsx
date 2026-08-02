@@ -1,9 +1,9 @@
-import { DashboardLayout } from "@/components/DashboardLayout";
-import { trpc } from "@/lib/trpc";
+import { DashboardLayout } from "./DashboardLayout";
+import { trpc } from "./trpc";
 import { useState } from "react";
 import { Upload, CheckCircle2, AlertCircle, Loader2, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
 import { toast } from "sonner";
 
 export default function CSVImport() {
@@ -11,6 +11,7 @@ export default function CSVImport() {
   const [importing, setImporting] = useState(false);
   const [results, setResults] = useState<{ success: number; errors: number; details: string[] } | null>(null);
   const utils = trpc.useUtils();
+  const createMutation = trpc.constituents.create.useMutation();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -68,7 +69,7 @@ export default function CSVImport() {
             .map(t => t.trim())
             .filter(t => ['Volunteer', 'Board', 'Member', 'Donor'].includes(t));
 
-          await trpc.constituents.create.mutate({
+          await createMutation.mutateAsync({
             firstName: row.firstname || '',
             lastName: row.lastname || '',
             primaryEmail: row.email || row.primaryemail || '',
@@ -168,10 +169,8 @@ Jane,Smith,jane@example.com,555-0101,456 Oak Ave,Springfield,IL,62702,Tech Inc,D
               className="hidden"
               id="csv-input"
             />
-            <label htmlFor="csv-input">
-              <Button asChild disabled={importing}>
-                <span>Select File</span>
-              </Button>
+            <label htmlFor="csv-input" className="inline-flex h-10 cursor-pointer items-center justify-center rounded-md bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50">
+              Select File
             </label>
             {file && <p className="text-sm text-primary">{file.name}</p>}
           </div>
