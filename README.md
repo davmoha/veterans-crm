@@ -1,4 +1,32 @@
-# Nonprofit CRM
+# Veterans CRM
+
+[![CI](https://github.com/davmoha/veterans-crm/actions/workflows/ci.yml/badge.svg)](https://github.com/davmoha/veterans-crm/actions/workflows/ci.yml)
+
+## Quick Start (Docker)
+
+The fastest way to run the app is with Docker Compose:
+
+```bash
+cp .env.example .env          # fill in DATABASE_URL and secrets
+docker compose up -d --build  # or: pnpm compose:up
+```
+
+Open **http://localhost:3000**.  
+To stop: `docker compose down` (or `pnpm compose:down`).
+
+> **Need a plain Node setup?** See [INSTALLATION.md](INSTALLATION.md) for the manual dev-environment steps.
+
+---
+
+## Deploy
+
+| Guide | When to use |
+|-------|-------------|
+| [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) | Self-hosted Docker / VPS |
+| [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md) | Render.com managed hosting |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | General deployment notes |
+
+---
 
 ## Overview
 
@@ -29,7 +57,7 @@ The application follows a client-server architecture:
 - **Server (Backend):** An Express.js server handling API requests, database interactions, and the Wix webhook endpoint. It uses tRPC for type-safe API calls and Drizzle ORM for database management.
 - **Database:** A MySQL-compatible database (e.g., TiDB) stores all constituent data, including core profiles, volunteer details, board information, membership data, and webhook logs.
 
-## Quick Start (Development)
+## Local Development (without Docker)
 
 To get the project running locally for development:
 
