@@ -1,0 +1,43 @@
+services:
+  app:
+    build: .
+    container_name: veterans-crm-app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mysql://crm_user:change_this_password@db:3306/veterans_crm
+      - PORT=3000
+      - OWNER_OPEN_ID=${OWNER_OPEN_ID:-local-admin}
+      - OWNER_NAME=${OWNER_NAME:-Local Admin}
+      - OWNER_EMAIL=${OWNER_EMAIL:-admin@example.com}
+      - VITE_OAUTH_PORTAL_URL=${VITE_OAUTH_PORTAL_URL:-http://localhost:3000}
+      - WIX_WEBHOOK_SECRET=${WIX_WEBHOOK_SECRET:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./drizzle:/app/drizzle:ro
+      - ./.env:/app/.env:ro
+    command: sh -c "node migrate-crm.mjs && node dist/index.js"
+
+  db:
+    image: mysql:8
+    container_name: veterans-crm-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: change_root_password
+      MYSQL_DATABASE: veterans_crm
+      MYSQL_USER: crm_user
+      MYSQL_PASSWORD: change_this_password
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pchange_root_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
