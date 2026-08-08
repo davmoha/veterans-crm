@@ -417,8 +417,8 @@ export default function Constituents() {
                     {((c.contactTypes as string[]) || []).map(t => <TypeBadge key={t} type={t} />)}
                   </div>
                   <div>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded border bg-slate-700/40 text-slate-400 border-slate-600/40">
-                      {c.source === "wix_webhook" ? "Import" : "Manual"}
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded border ${c.source !== "manual" ? "bg-slate-600/40 text-slate-300 border-slate-500/40" : "bg-slate-700/40 text-slate-400 border-slate-600/40"}`}>
+                      {c.source !== "manual" ? "Import" : "Manual"}
                     </span>
                   </div>
                 </div>
