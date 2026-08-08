@@ -1,7 +1,7 @@
 import { eq, like, or, sql, and, isNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { randomUUID } from "node:crypto";
-import { InsertUser, users, constituents, volunteerProfiles, volunteerShifts, boardProfiles, membershipProfiles, webhookLogs, invites } from "./drizzle/schema";
+import { InsertUser, users, constituents, volunteerProfiles, volunteerShifts, boardProfiles, membershipProfiles, invites } from "./drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -95,19 +95,12 @@ export async function getConstituentByEmail(email: string) {
   return result[0] ?? undefined;
 }
 
-export async function getConstituentByWixId(wixSubmissionId: string) {
-  const db = await getDb();
-  if (!db) return undefined;
-  const result = await db.select().from(constituents).where(eq(constituents.wixSubmissionId, wixSubmissionId)).limit(1);
-  return result[0] ?? undefined;
-}
-
 export async function createConstituent(data: {
   firstName: string; lastName: string; primaryEmail?: string; primaryPhone?: string;
   addressStreet1?: string; addressStreet2?: string; addressCity?: string; addressState?: string;
   addressZip?: string; addressCountry?: string; householdId?: string; employerName?: string;
   jobTitle?: string; contactTypes?: string[]; contactNotes?: string; optInEmail?: boolean;
-  optInSms?: boolean; optInPhysicalMail?: boolean; source?: string; wixSubmissionId?: string;
+  optInSms?: boolean; optInPhysicalMail?: boolean; source?: string;
 }) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -122,7 +115,7 @@ export async function createConstituent(data: {
     contactNotes: data.contactNotes ?? null,
     optInEmail: data.optInEmail ?? true, optInSms: data.optInSms ?? false,
     optInPhysicalMail: data.optInPhysicalMail ?? true,
-    source: data.source ?? "manual", wixSubmissionId: data.wixSubmissionId ?? null,
+    source: data.source ?? "manual",
   });
 }
 
@@ -140,9 +133,8 @@ export async function updateConstituent(id: number, data: Partial<{
 
 export async function getConstituentStats() {
   const db = await getDb();
-  if (!db) return { total: 0, volunteers: 0, board: 0, members: 0, wixImports: 0 };
+  if (!db) return { total: 0, volunteers: 0, board: 0, members: 0 };
   const [totalResult] = await db.select({ count: sql<number>`count(*)` }).from(constituents);
-  const [wixResult] = await db.select({ count: sql<number>`count(*)` }).from(constituents).where(eq(constituents.source, "wix_webhook"));
   const [volResult] = await db.select({ count: sql<number>`count(*)` }).from(volunteerProfiles);
   const [boardResult] = await db.select({ count: sql<number>`count(*)` }).from(boardProfiles);
   const [memResult] = await db.select({ count: sql<number>`count(*)` }).from(membershipProfiles);
@@ -151,7 +143,6 @@ export async function getConstituentStats() {
     volunteers: Number(volResult?.count ?? 0),
     board: Number(boardResult?.count ?? 0),
     members: Number(memResult?.count ?? 0),
-    wixImports: Number(wixResult?.count ?? 0),
   };
 }
 
@@ -250,28 +241,6 @@ export async function upsertMembershipProfile(constituentId: number, data: Parti
     const memberId = `MEM-${String(constituentId).padStart(6, "0")}`;
     await db.insert(membershipProfiles).values({ constituentId, uniqueMemberId: memberId, ...data });
   }
-}
-
-// ─── Webhook Logs ─────────────────────────────────────────────────────────────
-export async function logWebhook(data: {
-  source: string; submissionId?: string; rawPayload: unknown;
-  status: "success" | "duplicate" | "error"; constituentId?: number; errorMessage?: string;
-}) {
-  const db = await getDb();
-  if (!db) return;
-  try {
-    await db.insert(webhookLogs).values({
-      source: data.source, submissionId: data.submissionId ?? null,
-      rawPayload: data.rawPayload, status: data.status,
-      constituentId: data.constituentId ?? null, errorMessage: data.errorMessage ?? null,
-    });
-  } catch (err) { console.error("[DB] Failed to log webhook:", err); }
-}
-
-export async function getWebhookLogs(limit = 50) {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(webhookLogs).orderBy(sql`receivedAt DESC`).limit(limit);
 }
 
 // ─── Invites ──────────────────────────────────────────────────────────────────

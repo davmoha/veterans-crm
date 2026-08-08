@@ -8,7 +8,7 @@ import {
   getConstituentStats, getVolunteerProfile, upsertVolunteerProfile,
   getTotalHoursWorked, getVolunteerShifts, addVolunteerShift,
   getBoardProfile, upsertBoardProfile, getMembershipProfile, upsertMembershipProfile,
-  getWebhookLogs, getAllUsers, updateUserRole, deleteUser,
+  getAllUsers, updateUserRole, deleteUser,
 } from "./db";
 
 export const appRouter = router({
@@ -132,9 +132,6 @@ export const appRouter = router({
         const { constituentId, ...data } = input;
         return upsertMembershipProfile(constituentId, data);
       }),
-  }),
-  webhooks: router({
-    logs: protectedProcedure.input(z.object({ limit: z.number().optional() }).optional()).query(({ input }) => getWebhookLogs(input?.limit ?? 50)),
   }),
   users: router({
     list: protectedProcedure.query(async ({ ctx }) => {

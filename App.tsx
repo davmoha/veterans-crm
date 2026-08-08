@@ -7,7 +7,6 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./Home";
 import Constituents from "./Constituents";
 import ConstituentDetail from "./ConstituentDetail";
-import WebhookSettings from "./WebhookSettings";
 import FieldReference from "./FieldReference";
 import Users from "./Users";
 
@@ -17,7 +16,6 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/constituents" component={Constituents} />
       <Route path="/constituents/:id" component={ConstituentDetail} />
-      <Route path="/webhook-settings" component={WebhookSettings} />
       <Route path="/field-reference" component={FieldReference} />
       <Route path="/users" component={Users} />
       <Route path="/404" component={NotFound} />

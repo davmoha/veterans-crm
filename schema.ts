@@ -78,7 +78,6 @@ export const constituents = mysqlTable("constituents", {
 
   // Source tracking
   source: varchar("source", { length: 50 }).default("manual"),
-  wixSubmissionId: varchar("wixSubmissionId", { length: 128 }),
 });
 
 export type Constituent = typeof constituents.$inferSelect;
@@ -183,16 +182,3 @@ export const membershipProfiles = mysqlTable("membershipProfiles", {
 export type MembershipProfile = typeof membershipProfiles.$inferSelect;
 export type InsertMembershipProfile = typeof membershipProfiles.$inferInsert;
 
-// ─── Webhook Logs (audit trail for incoming Wix submissions) ─────────────────
-export const webhookLogs = mysqlTable("webhookLogs", {
-  id: int("id").autoincrement().primaryKey(),
-  source: varchar("source", { length: 50 }).default("wix").notNull(),
-  submissionId: varchar("submissionId", { length: 128 }),
-  rawPayload: json("rawPayload"),
-  status: mysqlEnum("status", ["success", "duplicate", "error"]).notNull(),
-  constituentId: int("constituentId"),
-  errorMessage: text("errorMessage"),
-  receivedAt: timestamp("receivedAt").defaultNow().notNull(),
-});
-
-export type WebhookLog = typeof webhookLogs.$inferSelect;

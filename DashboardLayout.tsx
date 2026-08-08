@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Webhook, BookOpen, Settings } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, BookOpen, Settings } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -30,7 +30,6 @@ import { Button } from "@/components/ui/button";
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
   { icon: Users, label: "Constituents", path: "/constituents" },
-  { icon: Webhook, label: "Wix Integration", path: "/webhook-settings" },
   { icon: BookOpen, label: "Field Reference", path: "/field-reference" },
   { icon: Settings, label: "Users", path: "/users", adminOnly: true },
 ];

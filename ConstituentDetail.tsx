@@ -92,8 +92,8 @@ export default function ConstituentDetail() {
                 {contactTypes.map(t => (
                   <span key={t} className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border ${TYPE_COLORS[t] || "bg-slate-700/60 text-slate-300 border-slate-600"}`}>{t}</span>
                 ))}
-                <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border ${constituent.source === "wix_webhook" ? "bg-teal-500/10 text-teal-400 border-teal-500/20" : "bg-slate-700/40 text-slate-400 border-slate-600/40"}`}>
-                  {constituent.source === "wix_webhook" ? "Wix Import" : "Manual Entry"}
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border bg-slate-700/40 text-slate-400 border-slate-600/40">
+                  {constituent.source === "wix_webhook" ? "Import" : "Manual Entry"}
                 </span>
               </div>
             </div>

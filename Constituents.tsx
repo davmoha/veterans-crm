@@ -387,7 +387,7 @@ export default function Constituents() {
               <Users className="w-10 h-10 text-muted-foreground/40 mb-3" />
               <p className="text-sm font-medium text-foreground">No constituents found</p>
               <p className="text-xs text-muted-foreground mt-1">
-                {search || hasFilters ? "Try adjusting your search or filters." : "Add one manually or connect Wix to start receiving submissions."}
+                {search || hasFilters ? "Try adjusting your search or filters." : "Add one manually to get started."}
               </p>
             </div>
           ) : (
@@ -417,8 +417,8 @@ export default function Constituents() {
                     {((c.contactTypes as string[]) || []).map(t => <TypeBadge key={t} type={t} />)}
                   </div>
                   <div>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded border ${c.source === "wix_webhook" ? "bg-teal-500/10 text-teal-400 border-teal-500/20" : "bg-slate-700/40 text-slate-400 border-slate-600/40"}`}>
-                      {c.source === "wix_webhook" ? "Wix" : "Manual"}
+                    <span className="text-[10px] px-1.5 py-0.5 rounded border bg-slate-700/40 text-slate-400 border-slate-600/40">
+                      {c.source === "wix_webhook" ? "Import" : "Manual"}
                     </span>
                   </div>
                 </div>
